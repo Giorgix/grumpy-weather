@@ -19,54 +19,62 @@ class SideMenu extends React.Component {
   }
   onSelectLocation = (index) => {
     const {dispatch} = this.props
-    console.log('Index: ', index);
     dispatch(actionCreators.changeLocation(index))
     this.props.navigation.navigate('DrawerToggle')
   }
   onRemoveLocation = (index) => {
     const {dispatch} = this.props
-    console.log('Index: ', index);
     dispatch(actionCreators.removeLocation(index))
     //this.props.navigation.navigate('DrawerToggle')
   }
   renderLocationItem = (location, i) => {
     const { tempUnit } = this.props
-    return (
-      <View key={i} style={styles.buttonsWrapper}>
-          <TouchableOpacity
-            style={styles.flexRowSpace}
-            onPress={() => this.onSelectLocation(i)}
-          >
-            <View style={styles.flexRowCenter}>
-              <Ionicons
-                name='md-rainy'
-                style={styles.bigIcon}
-                size={45}
-                color="skyblue"
-              />
-              <View>
-                <Text style={styles.item}>{location.name}</Text>
-                <Text style={styles.temp}>
-                  {Math.round(
-                    // If the unit is F (default) otherwise convert to C
-                    tempUnit === 'F' ? location.weather.condition.temp :
-                    (location.weather.condition.temp - 23) * 5/9
-                  )}
-                  °{tempUnit}
-                </Text>
+    if (location.weather) {
+      return (
+        <View key={i} style={styles.buttonsWrapper}>
+            <TouchableOpacity
+              style={styles.flexRowSpace}
+              onPress={() => this.onSelectLocation(i)}
+            >
+              <View style={styles.flexRowCenter}>
+                <Ionicons
+                  name='md-rainy'
+                  style={styles.bigIcon}
+                  size={45}
+                  color="skyblue"
+                />
+                <View>
+                  <Text style={styles.item}>{location.name}</Text>
+                  <Text style={styles.temp}>
+                    {Math.round(
+                      // If the unit is F (default) otherwise convert to C
+                      tempUnit === 'F' ? location.weather.condition.temp :
+                      (location.weather.condition.temp - 23) * 5/9
+                    )}
+                    °{tempUnit}
+                  </Text>
+                </View>
               </View>
-            </View>
-            <Ionicons
-              name='md-close'
-              size={21}
-              style={{padding: 5}}
-              color="#333333"
-              onPress={() => this.onRemoveLocation(i)}
+              <Ionicons
+                name='md-close'
+                size={21}
+                style={{padding: 5}}
+                color="#333333"
+                onPress={() => this.onRemoveLocation(i)}
 
-            />
-          </TouchableOpacity>
-      </View>
-    )
+              />
+            </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View key={i} style={styles.center}>
+          <Text>
+            Error getting the weather!
+          </Text>
+        </View>
+      )
+    }
   }
   render () {
     const { locations } = this.props
@@ -110,6 +118,11 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   menuIcon: {
     width: 24,

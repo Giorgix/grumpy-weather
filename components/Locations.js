@@ -4,6 +4,7 @@ import { actionCreators } from '../redux/locationsRedux'
 import { connect } from 'react-redux'
 import Input from './Input'
 
+// TODO separate component Presentational Vs Container
 const mapStateToProps = (state) => ({
   locations: state.locations,
 })
@@ -54,7 +55,7 @@ class LocationsScreen extends React.Component {
     }
   }
   onAddLocation = (location) => {
-    const {dispatch, locations} = this.props
+    const {dispatch} = this.props
     this.getWeatherYahoo(location).then(function(response) {
     // The first runs when the promise resolves, with the request.response
     // specified within the resolve() method.
@@ -73,10 +74,11 @@ class LocationsScreen extends React.Component {
   }
   onSelectLocation = (index) => {
     const {dispatch} = this.props
-    console.log('Index: ', index);
     dispatch(actionCreators.changeLocation(index))
     this.props.navigation.goBack()
   }
+
+  //TODO Make own presentational component? Too small?
   renderSearchItem = (location, i) => {
     return (
       <TouchableOpacity
@@ -89,6 +91,7 @@ class LocationsScreen extends React.Component {
       </TouchableOpacity>
     )
   }
+  //TODO Make own presentational component? Too small?
   renderLocationItem = (location, i) => {
     return (
       <View key={i}>
@@ -105,7 +108,7 @@ class LocationsScreen extends React.Component {
   render() {
     const { loading, error, searchResults } = this.state
     const { navigation, locations } = this.props;
-
+    //TODO Make search results own presentational component
     const list = searchResults.length > 0 ? (
       <FlatList
         data={searchResults}

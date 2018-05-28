@@ -3,7 +3,7 @@ import { Text, View, Button, StyleSheet, Image, ScrollView, TouchableOpacity } f
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux'
 import { DrawerNavigator, StackNavigator, NavigationActions } from 'react-navigation';
-import Weather from './Weather';
+import WeatherContainer from './WeatherContainer';
 
 const mapStateToProps = (state) => ({
   tempUnit: state.tempUnit,
@@ -16,13 +16,16 @@ class HomeScreen extends React.Component {
     return {
       headerTitle: 'Grumpy Weather',
       headerLeft: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DrawerToggle')}
+        >
         <Ionicons
           name='md-menu'
           style={styles.menuIcon}
           size={25}
           color="#333333"
-          onPress={() => navigation.navigate('DrawerToggle')}
         />
+      </TouchableOpacity>
       ),
     }
   };
@@ -31,7 +34,7 @@ class HomeScreen extends React.Component {
     const {tempUnit, selectedLocation, locations} = this.props
     return (
       <ScrollView style={styles.container}>
-        <Weather tempUnit={tempUnit} location={locations[selectedLocation]}/>
+        <WeatherContainer />
       </ScrollView>
     );
   }

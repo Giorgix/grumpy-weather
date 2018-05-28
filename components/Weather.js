@@ -1,83 +1,12 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { View, Button, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { actionCreators } from '../redux/locationsRedux';
-
-export default class Weather extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      error: false,
-    }
-  }
-  getWeatherYahoo = async (location) => {
-    try {
-      const response = await fetch('https://query.yahooapis.com/v1/public/yql?q= select * from weather.forecast where woeid in (SELECT woeid FROM geo.places WHERE text="(' + location.lat + ',' + location.lon + ')")&format=json')
-      const weather = await response.json();
-      this.setState({loading: false, weather: weather.query.results.channel})
-    } catch(e) {
-      this.setState({loading: false, error: true})
-    }
-  }
-  getWeatherOpen = async (location) => {
-    try {
-      const response = await fetch('http://api.openweathermap.org/data/2.5/weather?lat=' + location.lat + '&lon=' + location.lon + '&units=imperial&APPID=8e69078d04cbc142a30de0c0456fe417')
-      const weather = await response.json();
-
-      this.setState({loading: false, weather})
-    } catch(e) {
-      this.setState({loading: false, error: true})
-    }
-  }
-  /*componentDidMount = () => {
-    const { location } = this.props
-    this.getWeatherYahoo(location)
-  }
-  componentDidUpdate = (prevProps, prevState, snapshot) => {
-    if (prevProps !== this.props) {
-      const { location } = this.props
-      this.getWeatherYahoo(location)
-    }
-  }*/
-  //TODO implement update button
-  onUpdateWeather = (location) => {
-    const {dispatch} = this.props
-    this.getWeatherYahoo(location).then(function(response) {
-    // The first runs when the promise resolves, with the request.response
-    // specified within the resolve() method.
-      location.weather = response;
-      dispatch(actionCreators.changeLocation(location))
-      // The second runs when the promise
-      // is rejected, and logs the Error specified with the reject() method.
-    }, function(Error) {
-      console.log(Error);
-    });
-  }
-  render() {
-    const {loading, error} = this.state
-    const {tempUnit, location} = this.props
-    if (loading) {
-      return (
-        <View style={styles.center}>
-          <ActivityIndicator animating={true}/>
-        </View>
-      )
-    }
-
-    if (error) {
-      return (
-        <View style={styles.center}>
-          <Text>
-            Error getting the weather!
-          </Text>
-        </View>
-      )
-    }
-
+import { actionCreators } from '../redux/locationsRedux'
+import PropTypes from 'prop-types'
+const Weather = ({location, onUpdate, tempUnit}) => {
+  if (location.weather) {
     return (
-      //TODO show weather from location props
       <View style={styles.weatherBox}>
         <View style={styles.weatherHeader}>
           <View style={styles.box}>
@@ -106,15 +35,28 @@ export default class Weather extends Component {
           </View>
         </View>
         <View>
-          <Text>
-            Updated at: {moment(location.updatedAt).fromNow()}
+          <Text style={styles.textWhite}>
+            Updated: {moment(location.updatedAt).fromNow()}
           </Text>
+          <Button
+            title="Update"
+            onPress={() => onUpdate(location)}
+          />
         </View>
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.center}>
+        <Text>
+          Error getting the weather!
+        </Text>
       </View>
     )
   }
 
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -161,6 +103,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
   },
+  textWhite: {
+    color: '#FEFEFE',
+    marginBottom: 8,
+  },
   weatherTemp: {
     fontSize: 40,
     color: 'white',
@@ -181,3 +127,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+
+Weather.propTypes = {
+  location: PropTypes.object.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  tempUnit: PropTypes.string.isRequired,
+}
+
+export default Weather

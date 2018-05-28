@@ -3,9 +3,9 @@
 export const TYPES = {
   ADD_LOCATION: 'ADD_LOCATION',
   REMOVE_LOCATION: 'REMOVE_LOCATION',
-  CHANGE_TEMPERATURE: 'CHANGE_TEMPERATURE',
+  CHANGE_TEMPERATURE_UNIT: 'CHANGE_TEMPERATURE_UNIT',
   CHANGE_LOCATION: 'CHANGE_LOCATION',
-  SET_WEATHER: 'SET_WEATHER',
+  UPDATE_WEATHER: 'UPDATE_WEATHER',
 }
 
 // Helper functions to dispatch actions, optionally with payloads
@@ -16,14 +16,14 @@ export const actionCreators = {
   removeLocation: (index) => {
     return {type: TYPES.REMOVE_LOCATION, payload: index}
   },
-  changeTemperature: (unit) => {
-    return {type: TYPES.CHANGE_TEMPERATURE, payload: unit}
+  changeTemperatureUnit: (unit) => {
+    return {type: TYPES.CHANGE_TEMPERATURE_UNIT, payload: unit}
   },
   changeLocation: (index) => {
     return {type: TYPES.CHANGE_LOCATION, payload: index}
   },
-  setWeather: (weather) => {
-    return {type: TYPES.SET_WEATHER, payload}
+  updateWeather: (weather) => {
+    return {type: TYPES.UPDATE_WEATHER, payload: weather}
   },
 }
 
@@ -46,8 +46,8 @@ const initialState = {
         "condition": {
             "code": "30",
             "date": "Fri, 25 May 2018 06:00 PM CEST",
-            "temp": "66",
-            "text": "Partly Cloudy"
+            "temp": "86",
+            "text": "Sunny"
         },
       },
     },
@@ -67,7 +67,7 @@ const initialState = {
         "condition": {
             "code": "30",
             "date": "Fri, 25 May 2018 01:00 PM EDT",
-            "temp": "85",
+            "temp": "65",
             "text": "Partly Cloudy"
         },
       },
@@ -101,7 +101,7 @@ export const reducer = (state = initialState, action) => {
         locations: locations.filter((location, i) => i !== payload),
       }
     }
-    case TYPES.CHANGE_TEMPERATURE: {
+    case TYPES.CHANGE_TEMPERATURE_UNIT: {
       return {
         ...state,
         tempUnit: payload,
@@ -111,6 +111,21 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedLocation: payload,
+      }
+    }
+    case TYPES.UPDATE_WEATHER: {
+      return {
+        ...state,
+        locations: locations.map((location, i) => {
+          if (payload.itemId === i) {
+            return {
+              ...location,
+              weather: payload.weather,
+              updatedAt: new Date()
+            }
+          }
+          return location
+        }),
       }
     }
     default: {

@@ -12,7 +12,7 @@ class SettingsScreen extends React.Component {
   onChangeTemperature = (unit) => {
     const {dispatch, navigation} = this.props
 
-    dispatch(actionCreators.changeTemperature(unit))
+    dispatch(actionCreators.changeTemperatureUnit(unit))
     //navigation.goBack()
   }
 
