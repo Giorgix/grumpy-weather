@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash'
 import { ActivityIndicator, Text, View, Button, StyleSheet, Image, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { actionCreators } from '../redux/locationsRedux'
 import { connect } from 'react-redux'
@@ -54,6 +55,7 @@ class LocationsScreen extends React.Component {
       this.setState({loading: false, error: true})
     }
   }
+  onSearchDelayed = _.debounce(this.onSearchLocation, 250)
   onAddLocation = (location) => {
     const {dispatch} = this.props
     this.getWeatherYahoo(location).then(function(response) {
@@ -130,7 +132,7 @@ class LocationsScreen extends React.Component {
       <View style={styles.container}>
         <Input
           placeholder={'Type a location, then hit enter!'}
-          onSearch={this.onSearchLocation}
+          onSearch={this.onSearchDelayed}
         />
         {list}
       </View>

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { View, Button, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { actionCreators } from '../redux/locationsRedux'
 import PropTypes from 'prop-types'
+import getGrumpyText from '../utils/grumpy-weather'
 const Weather = ({location, onUpdate, tempUnit}) => {
   if (location.weather) {
     return (
@@ -35,6 +35,9 @@ const Weather = ({location, onUpdate, tempUnit}) => {
           </View>
         </View>
         <View>
+          <Text style={styles.textWhite}>
+            {getGrumpyText(location.weather.condition.code, location.weather.condition.temp)}
+          </Text>
           <Text style={styles.textWhite}>
             Updated: {moment(location.updatedAt).fromNow()}
           </Text>

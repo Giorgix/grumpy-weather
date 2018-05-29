@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { TextInput, StyleSheet } from 'react-native'
-import _ from 'lodash'
 
 export default class Input extends Component {
   constructor(props) {
     super(props)
     // We add a debounce to be sure the user finish typing
     // before sending the request
-    this.onSearchDelayed = _.debounce(this.props.onSearch, 250)
+    //this.onSearchDelayed = _.debounce(this.props.onSearch, 250)
     this.state = {
       text: ''
     }
@@ -17,7 +16,7 @@ export default class Input extends Component {
     this.setState({text})
     const {onSearch} = this.props
     if (!text) return
-    this.onSearchDelayed(text)
+    onSearch(text)
   }
   onSubmitEditing = () => {
     const {onSearch} = this.props

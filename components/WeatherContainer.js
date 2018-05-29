@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { View, Button, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { View, Button, Text, ActivityIndicator, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { actionCreators } from '../redux/locationsRedux'
 import { connect } from 'react-redux'
@@ -14,6 +14,23 @@ const mapStateToProps = (state) => ({
 })
 
 class WeatherContainer extends Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: 'Grumpy Weather',
+      headerLeft: (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('DrawerToggle')}
+        >
+        <Ionicons
+          name='md-menu'
+          style={styles.menuIcon}
+          size={25}
+          color="#333333"
+        />
+      </TouchableOpacity>
+      ),
+    }
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +71,7 @@ class WeatherContainer extends Component {
       this.getWeatherYahoo(location)
     }
   }*/
-  
+
   //TODO check when was the last time the weather was updatedAt
   //TODO Only update weather if the last update was > 2-5 min away
   onUpdateWeather = (location) => {
@@ -93,12 +110,13 @@ class WeatherContainer extends Component {
     }
 
     return (
-      //TODO show weather from location props
-      <Weather
-        location={locations[selectedLocation]}
-        onUpdate={this.onUpdateWeather}
-        tempUnit={tempUnit}
-      />
+      <ScrollView style={styles.container}>
+        <Weather
+          location={locations[selectedLocation]}
+          onUpdate={this.onUpdateWeather}
+          tempUnit={tempUnit}
+        />
+      </ScrollView>
     )
   }
 
@@ -109,6 +127,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  menuIcon: {
+    width: 26,
+    height: 26,
+    marginLeft: 15,
+  },
+  container: {
+    flex: 1
   },
 })
 

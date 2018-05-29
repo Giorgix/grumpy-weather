@@ -65,10 +65,10 @@ const initialState = {
         "link": "http://us.rd.yahoo.com/dailynews/rss/weather/Country__Country/*https://weather.yahoo.com/country/state/city-23683025/",
         "pubDate": "Fri, 25 May 2018 01:00 PM EDT",
         "condition": {
-            "code": "30",
+            "code": "32",
             "date": "Fri, 25 May 2018 01:00 PM EDT",
-            "temp": "65",
-            "text": "Partly Cloudy"
+            "temp": "63",
+            "text": "Sunny"
         },
       },
     },
