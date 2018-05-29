@@ -17,7 +17,7 @@ const Weather = ({location, onUpdate, tempUnit}) => {
               {Math.round(
                 // If the unit is F (default) otherwise convert to C
                 tempUnit === 'F' ? location.weather.condition.temp :
-                (location.weather.condition.temp - 23) * 5/9
+                (location.weather.condition.temp - 32) * 5/9
               )}
               °{tempUnit}
             </Text>
