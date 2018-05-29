@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { View, Button, Text, ActivityIndicator, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Alert, Button, Text, ActivityIndicator, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { actionCreators } from '../redux/locationsRedux'
 import { connect } from 'react-redux'
@@ -71,22 +71,38 @@ class WeatherContainer extends Component {
       this.getWeatherYahoo(location)
     }
   }*/
-
-  //TODO check when was the last time the weather was updatedAt
-  //TODO Only update weather if the last update was > 2-5 min away
   onUpdateWeather = (location) => {
     const {dispatch, selectedLocation} = this.props
-    this.setState({loading: true})
-    this.getWeatherYahoo(location).then(function(response) {
-    // The first runs when the promise resolves, with the request.response
-    // specified within the resolve() method.
-    const payload = {itemId: selectedLocation, weather: response}
-    dispatch(actionCreators.updateWeather(payload))
-    // The second runs when the promise
-    // is rejected, and logs the Error specified with the reject() method.
-    }, function(Error) {
-      console.log(Error);
-    });
+    const updatedAt = new Date(location.updatedAt)
+    // Set a threshold of 3 min so we don't send too many request
+    // to update the weather
+    const updateThreshold = new Date(updatedAt.getTime() + 3*60000)
+    const now = new Date()
+
+    if (now >= updateThreshold) {
+      this.setState({loading: true})
+      this.getWeatherYahoo(location).then(function(response) {
+
+      // The first runs when the promise resolves, with the request.response
+      // specified within the resolve() method.
+      const payload = {itemId: selectedLocation, weather: response}
+      dispatch(actionCreators.updateWeather(payload))
+
+      // The second runs when the promise
+      // is rejected, and logs the Error specified with the reject() method.
+      }, function(Error) {
+        console.log(Error);
+      });
+    } else {
+      return Alert.alert(
+        "Hey!",
+        "You need to relax... the weather doesn't change so frequently.",
+        [
+          {text: "Ok I'll wait at least 3 min."}
+        ]
+      )
+    }
+
   }
   render() {
     const {loading, error} = this.state
