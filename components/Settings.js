@@ -8,6 +8,19 @@ const mapStateToProps = (state) => ({
 })
 
 class SettingsScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: 'Settings',
+    }
+  };
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      celsiusChecked: props.tempUnit === 'C',
+      fahrenheitChecked: props.tempUnit === 'F'
+    }
+  }
 
   onChangeTemperature = (unit) => {
     const {dispatch, navigation} = this.props
@@ -15,22 +28,25 @@ class SettingsScreen extends React.Component {
     dispatch(actionCreators.changeTemperatureUnit(unit))
     //navigation.goBack()
   }
-
   render() {
     const {tempUnit} = this.props
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Settings</Text>
-        <Text>Current unit: {tempUnit}</Text>
+      const temperatureButton = tempUnit === 'F' ? (
         <Button
-          title="Change to F"
-          onPress={() => this.onChangeTemperature('F')}
-        />
-        <Button
-          title="Change to C"
+          title="Change to Celsius"
           onPress={() => this.onChangeTemperature('C')}
         />
+      ) : (
+        <Button
+          title="Change to Fahrenheit"
+          onPress={() => this.onChangeTemperature('F')}
+        />
+      )
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{fontSize: 20, marginBottom: 14}}>Current unit: {tempUnit === 'F' ? 'Fahrenheit' : 'Celsius'}</Text>
+        {temperatureButton}
       </View>
+
     );
   }
 }
