@@ -5,6 +5,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { actionCreators } from '../redux/locationsRedux'
 import { connect } from 'react-redux'
 import Weather from './Weather';
+import getGrumpyText from '../utils/grumpy-weather'
+import getWeatherIcon from '../utils/weather-icons'
 
 
 const mapStateToProps = (state) => ({
@@ -107,6 +109,7 @@ class WeatherContainer extends Component {
   render() {
     const {loading, error} = this.state
     const {tempUnit, locations, selectedLocation} = this.props
+    const currentLocation = locations[selectedLocation]
     if (loading) {
       return (
         <View style={styles.center}>
@@ -128,9 +131,11 @@ class WeatherContainer extends Component {
     return (
       <ScrollView style={styles.container}>
         <Weather
-          location={locations[selectedLocation]}
+          location={currentLocation}
           onUpdate={this.onUpdateWeather}
           tempUnit={tempUnit}
+          grumpyText={getGrumpyText(currentLocation.weather.condition.code, currentLocation.weather.condition.temp)}
+          weatherIconCode={getWeatherIcon(currentLocation.weather.condition.code)}
         />
       </ScrollView>
     )

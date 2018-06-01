@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { DrawerNavigator, StackNavigator, NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux'
 import { actionCreators } from '../redux/locationsRedux'
+import getWeatherIcon from '../utils/weather-icons'
 
 const mapStateToProps = (state) => ({
   locations: state.locations,
@@ -38,7 +39,7 @@ class SideMenu extends React.Component {
             >
               <View style={styles.flexRowCenter}>
                 <Ionicons
-                  name='md-rainy'
+                  name={getWeatherIcon(location.weather.condition.code)}
                   style={styles.bigIcon}
                   size={45}
                   color="skyblue"

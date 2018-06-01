@@ -3,8 +3,7 @@ import moment from 'moment';
 import { View, Button, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types'
-import getGrumpyText from '../utils/grumpy-weather'
-const Weather = ({location, onUpdate, tempUnit}) => {
+const Weather = ({location, onUpdate, tempUnit, grumpyText, weatherIconCode}) => {
   if (location.weather) {
     return (
       <View style={styles.weatherBox}>
@@ -24,7 +23,7 @@ const Weather = ({location, onUpdate, tempUnit}) => {
           </View>
           <View style={styles.box}>
             <Ionicons
-              name='md-rainy'
+              name={weatherIconCode}
               style={styles.bigIcon}
               size={45}
               color="skyblue"
@@ -34,9 +33,9 @@ const Weather = ({location, onUpdate, tempUnit}) => {
             </Text>
           </View>
         </View>
-        <View>
+        <View style={styles.center} >
           <Text style={styles.textWhite}>
-            {getGrumpyText(location.weather.condition.code, location.weather.condition.temp)}
+            {grumpyText}
           </Text>
           <Text style={styles.textWhite}>
             Updated: {moment(location.updatedAt).fromNow()}
@@ -109,6 +108,9 @@ const styles = StyleSheet.create({
   textWhite: {
     color: '#FEFEFE',
     marginBottom: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
   },
   weatherTemp: {
     fontSize: 40,
